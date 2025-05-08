@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>WebSocket Test Client - Digital Menu</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      h1 {
+        color: #42d158;
+      }
+
+      .connection-status {
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+      }
+
+      .connected {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .disconnected {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .connecting {
+        background-color: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeeba;
+      }
+
+      .message-container {
+        height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 20px;
+        background-color: #f8f9fa;
+      }
+
+      .message {
+        margin-bottom: 10px;
+        padding: 10px;
+        border-radius: 4px;
+      }
+
+      .message-product-created {
+        background-color: #d1e7dd;
+        border-left: 4px solid #42d158;
+      }
+
+      .message-product-updated {
+        background-color: #cfe2ff;
+        border-left: 4px solid #0d6efd;
+      }
+
+      .message-product-deleted {
+        background-color: #f8d7da;
+        border-left: 4px solid #dc3545;
+      }
+
+      .message-time {
+        font-size: 12px;
+        color: #6c757d;
+      }
+
+      .message-content {
+        margin-top: 5px;
+        white-space: pre-wrap;
+      }
+
+      .controls {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+      }
+
+      button {
+        padding: 8px 12px;
+        background-color: #42d158;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background-color: #2ab143;
+      }
+
+      button.disconnect {
+        background-color: #dc3545;
+      }
+
+      button.disconnect:hover {
+        background-color: #bb2d3b;
+      }
+
+      button.connect {
+        background-color: #0d6efd;
+      }
+
+      button.connect:hover {
+        background-color: #0a58ca;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>WebSocket Test Client - Digital Menu</h1>
+
+    <div id="connection-status" class="connection-status disconnected">
+      Status: Disconnected
+    </div>
+
+    <div class="controls">
+      <button id="connect-btn" class="connect">Connect</button>
+      <button id="disconnect-btn" class="disconnect" disabled>
+        Disconnect
+      </button>
+      <button id="clear-btn">Clear Messages</button>
+    </div>
+
+    <h2>Test Product Notification</h2>
+    <div class="controls">
+      <button id="test-create-btn">Test Create Product</button>
+      <button id="test-update-btn">Test Update Product</button>
+      <button id="test-delete-btn">Test Delete Product</button>
+    </div>
+
+    <h2>Messages</h2>
+    <div id="message-container" class="message-container"></div>
+
+    <script>
+      // DOM Elements
+      const statusEl = document.getElementById("connection-status");
+      const connectBtn = document.getElementById("connect-btn");
+      const disconnectBtn = document.getElementById("disconnect-btn");
+      const clearBtn = document.getElementById("clear-btn");
+      const messageContainer = document.getElementById("message-container");
+      const testCreateBtn = document.getElementById("test-create-btn");
+      const testUpdateBtn = document.getElementById("test-update-btn");
+      const testDeleteBtn = document.getElementById("test-delete-btn");
+
+      // WebSocket connection
+      let socket = null;
+
+      // Connect to WebSocket server
+      function connect() {
+        if (socket) {
+          addMessage("System", "Already connected, disconnecting first");
+          socket.close();
+        }
+
+        updateStatus("connecting");
+
+        socket = new WebSocket("ws://localhost:5000");
+
+        socket.addEventListener("open", (event) => {
+          updateStatus("connected");
+          toggleButtons(true);
+          addMessage("System", "Connected to WebSocket server");
+        });
+
+        socket.addEventListener("message", (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            addMessage(data.type, data, true);
+          } catch (error) {
+            addMessage("Error", "Failed to parse message: " + error.message);
+            addMessage("Raw", event.data);
+          }
+        });
+
+        socket.addEventListener("close", (event) => {
+          updateStatus("disconnected");
+          toggleButtons(false);
+          addMessage(
+            "System",
+            `Disconnected (Code: ${event.code}, Reason: ${
+              event.reason || "None"
+            })`
+          );
+          socket = null;
+        });
+
+        socket.addEventListener("error", (error) => {
+          addMessage("Error", "WebSocket error");
+          console.error("WebSocket error:", error);
+        });
+      }
+
+      // Disconnect from WebSocket server
+      function disconnect() {
+        if (socket) {
+          socket.close();
+          socket = null;
+        }
+      }
+
+      // Update connection status
+      function updateStatus(status) {
+        statusEl.className = `connection-status ${status}`;
+        statusEl.textContent = `Status: ${
+          status.charAt(0).toUpperCase() + status.slice(1)
+        }`;
+      }
+
+      // Toggle buttons based on connection status
+      function toggleButtons(connected) {
+        connectBtn.disabled = connected;
+        disconnectBtn.disabled = !connected;
+
+        testCreateBtn.disabled = !connected;
+        testUpdateBtn.disabled = !connected;
+        testDeleteBtn.disabled = !connected;
+      }
+
+      // Add message to container
+      function addMessage(type, content, isJson = false) {
+        const messageEl = document.createElement("div");
+        messageEl.className = `message message-${type.toLowerCase()}`;
+
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString();
+
+        const timeEl = document.createElement("div");
+        timeEl.className = "message-time";
+        timeEl.textContent = `[${timeStr}] ${type}`;
+
+        const contentEl = document.createElement("div");
+        contentEl.className = "message-content";
+
+        if (isJson) {
+          contentEl.textContent = JSON.stringify(content, null, 2);
+        } else {
+          contentEl.textContent = content;
+        }
+
+        messageEl.appendChild(timeEl);
+        messageEl.appendChild(contentEl);
+
+        messageContainer.appendChild(messageEl);
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+      }
+
+      // Send test notification via API
+      async function sendTestNotification(type, data) {
+        try {
+          const response = await fetch(
+            "http://localhost:5000/api/products/debug/notify",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ type, data }),
+            }
+          );
+
+          const result = await response.json();
+
+          if (result.success) {
+            addMessage("System", `Test notification sent: ${type}`);
+          } else {
+            addMessage(
+              "Error",
+              `Failed to send test notification: ${result.message}`
+            );
+          }
+        } catch (error) {
+          addMessage(
+            "Error",
+            `Error sending test notification: ${error.message}`
+          );
+        }
+      }
+
+      // Event Listeners
+      connectBtn.addEventListener("click", connect);
+      disconnectBtn.addEventListener("click", disconnect);
+      clearBtn.addEventListener("click", () => {
+        messageContainer.innerHTML = "";
+      });
+
+      // Test notification buttons
+      testCreateBtn.addEventListener("click", () => {
+        const testProduct = {
+          id: "test-" + Date.now(),
+          name: "Test Product " + Date.now(),
+          description: "This is a test product created for WebSocket testing",
+          price: 99.99,
+          category: "burger",
+          image:
+            "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+          rating: 4.5,
+        };
+
+        sendTestNotification("product_created", { product: testProduct });
+      });
+
+      testUpdateBtn.addEventListener("click", () => {
+        const oldData = {
+          id: "test-update",
+          name: "Before Update",
+          price: 50,
+          category: "pizza",
+          description: "Before description",
+        };
+
+        const updatedProduct = {
+          id: "test-update",
+          name: "After Update " + Date.now(),
+          description: "This product was updated for testing " + Date.now(),
+          price: 149.99,
+          category: "burger",
+          image:
+            "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80",
+          rating: 4.8,
+        };
+
+        sendTestNotification("product_updated", {
+          product: updatedProduct,
+          oldData: oldData,
+        });
+      });
+
+      testDeleteBtn.addEventListener("click", () => {
+        const deletedProduct = {
+          id: "test-delete-" + Date.now(),
+          name: "Deleted Product " + Date.now(),
+        };
+
+        sendTestNotification("product_deleted", { product: deletedProduct });
+      });
+
+      // Initialize on page load
+      document.addEventListener("DOMContentLoaded", () => {
+        toggleButtons(false);
+        updateStatus("disconnected");
+        addMessage("System", "WebSocket client initialized");
+      });
+    </script>
+  </body>
+</html>

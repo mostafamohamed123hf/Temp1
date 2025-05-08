@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>نظام الكاشير | Digital Menu</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../../admin/css/admin.css">
+    <link rel="stylesheet" href="../css/cashier.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+    <meta name="description" content="Cashier system for Digital Menu - Manage orders and payments">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="back-button">
+                <a href="../../admin/admin.html"><i class="fas fa-arrow-right"></i></a>
+            </div>
+            <h1 class="page-title">نظام الكاشير</h1>
+            <div class="toggle-switch">
+                <div class="toggle-switch-container">
+                    <input type="checkbox" id="switch" checked>
+                    <label for="switch"></label>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="cashier-content">
+        <!-- Orders Dashboard -->
+        <section class="cashier-section" id="active-orders-section">
+            <div class="section-header">
+            <h2 class="section-title">الطلبات النشطة</h2>
+            </div>
+            
+            <div class="orders-grid" id="orders-grid">
+                <!-- Active orders will be loaded here dynamically -->
+                <div class="no-orders-message" id="no-orders-message">
+                    <i class="fas fa-receipt"></i>
+                    <p>لا توجد طلبات نشطة حالياً</p>
+                    <small>طلبات الطاولات ستظهر هنا عند إدخال رقم الطاولة</small>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Quick Order Processing -->
+        <section class="cashier-section" id="quick-processing-section">
+            <div class="section-header">
+                <h2 class="section-title">إدارة سريعة</h2>
+            </div>
+            
+            <div class="quick-actions">
+                <div class="qr-scan-container">
+                    <div class="manual-table-entry">
+                        <input type="number" id="table-number-input" min="1" placeholder="رقم الطاولة">
+                        <button class="check-table-button" id="check-table-button">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="cashier-actions">
+                    <!-- Test order button will be added here dynamically -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Recent Activity -->
+        <section class="cashier-section" id="recent-activity-section">
+            <div class="recent-activity-header">
+            <h2 class="section-title">النشاط الأخير</h2>
+                <!-- Reset button will be added here dynamically -->
+            </div>
+            
+            <div class="activity-list" id="activity-list">
+                <!-- Recent activity will be loaded here -->
+                <div class="empty-message">
+                    <i class="fas fa-history"></i>
+                    <p>لا يوجد نشاط حديث</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Order Details Modal -->
+    <div class="modal" id="order-details-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-order-modal">&times;</span>
+            <h2 id="order-details-title">تفاصيل الطلب</h2>
+            
+            <div class="order-details-container">
+                <!-- Order info will be added dynamically -->
+                
+                <div class="order-items-table">
+                    <table class="items-table">
+                        <thead>
+                            <tr>
+                                <th>الصنف</th>
+                                <th>السعر</th>
+                                <th>الكمية</th>
+                                <th>الإجمالي</th>
+                            </tr>
+                        </thead>
+                        <tbody id="order-items">
+                        <!-- Order items will be loaded here -->
+                        </tbody>
+                    </table>
+                    
+                    <table class="totals-table">
+                        <tr>
+                            <td>المجموع الفرعي:</td>
+                            <td id="order-subtotal"></td>
+                        </tr>
+                        <tr id="tax-row">
+                            <td>الضريبة:</td>
+                            <td id="order-tax"></td>
+                        </tr>
+                        <tr id="service-tax-row">
+                            <td>ضريبة الخدمة:</td>
+                            <td id="order-service-tax"></td>
+                        </tr>
+                        <tr id="discount-row">
+                            <td>الخصم:</td>
+                            <td id="order-discount"></td>
+                        </tr>
+                        <tr class="grand-total">
+                            <td>الإجمالي:</td>
+                            <td id="order-total"></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="order-actions">
+                    <button class="complete-order-button" id="complete-order-button">
+                        <i class="fas fa-check-circle"></i>
+                        <span>إنهاء الطلب وإصدار الفاتورة</span>
+                    </button>
+                    <button class="print-receipt-button" id="print-receipt-button">
+                        <i class="fas fa-print"></i>
+                        <span>طباعة الإيصال</span>
+                    </button>
+                    <button class="cancel-order-button" id="cancel-order-button">
+                        <i class="fas fa-ban"></i>
+                        <span>إلغاء الطلب</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- New notification system -->
+    <div class="cashier-notifications" id="cashier-notifications"></div>
+    
+    <!-- Fixed notifications system -->
+    <div id="fixed-notifications"></div>
+    
+    <!-- Audio for notifications -->
+    <audio id="notification-sound" src="../../sounds/notification.mp3" preload="auto"></audio>
+    
+    <!-- Scripts -->
+    <script src="../js/cashier.js"></script>
+    <script src="../js/visitor-tracker.js"></script>
+</body>
+</html> 

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ديجيتال منيو | Digital Menu</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍔</text></svg>">
+    <meta name="description" content="Digital menu for ordering food online - pizza, burgers, and sandwiches">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="menu-icon">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div id="table-number-display" class="table-number-display"></div>
+            <div class="toggle-switch">
+                <span class="toggle-label">الوضع</span>
+                <div class="toggle-switch-container">
+                    <input type="checkbox" id="switch" checked>
+                    <label for="switch"></label>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <section class="user-info">
+        <div class="welcome">
+            <span class="welcome-text">مرحبا بك 👋</span>
+            <h2 class="user-name">محمد يحيى</h2>
+        </div>
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="بحث" id="search-input">
+        </div>
+    </section>
+    
+    <section class="hero-banner">
+        <div class="new-banner">
+            <div class="banner-image"></div>
+            <div class="banner-content">
+                <h2>Delicious Burger</h2>
+                <p>Fresh ingredients, amazing taste</p>
+                <div class="banner-price">
+                    <span class="original-price">75 EGP</span>
+                    <span class="discounted-price">55 EGP</span>
+                </div>
+                <button class="order-now-btn" data-category="burger">
+                    اطلب الآن <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+    
+    <section class="category-filters">
+        <div class="filter active" data-category="all">
+            <span>الكل</span>
+        </div>
+        <div class="filter" data-category="pizza">
+            <i class="fas fa-pizza-slice"></i>
+            <span>بيتزا</span>
+        </div>
+        <div class="filter" data-category="burger">
+            <i class="fas fa-hamburger"></i>
+            <span>برجر</span>
+        </div>
+        <div class="filter" data-category="sandwich">
+            <i class="fas fa-utensils"></i>
+            <span>سندوتش</span>
+        </div>
+        <div class="filter" data-category="drink">
+            <i class="fas fa-glass-whiskey"></i>
+            <span>مشروبات</span>
+        </div>
+    </section>
+    
+    <section class="product-grid">
+        <!-- Products will be dynamically loaded here -->
+        <div class="loading-spinner" id="products-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>جاري تحميل المنتجات...</p>
+        </div>
+    </section>
+
+  
+
+    <nav class="bottom-nav" id="bottom-nav">
+        <a href="cart.html" class="nav-item" id="cart-icon">
+            <i class="fas fa-shopping-cart"></i>
+            <span class="cart-count">0</span>
+        </a>
+        <a href="#" class="nav-item active">
+            <i class="fas fa-home"></i>
+        </a>
+    </nav>
+    
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script src="../js/script.js"></script>
+    <script src="../js/visitor-tracker.js"></script>
+    <script>
+        // Initialize Swiper
+        // ... existing code ...
+    </script>
+</body>
+</html> 

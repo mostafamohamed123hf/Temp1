@@ -1,0 +1,1338 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+}
+
+:root {
+    --primary-color: #42d158;
+    --dark-bg: #0c1428;
+    --card-bg: #1c2741;
+    --text-light: #ffffff;
+    --text-secondary: #a0a0a0;
+    --accent-color: #ff5e84;
+    --card-radius: 15px;
+    --button-radius: 8px;
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--text-light);
+    padding-bottom: 80px;
+    transition: background-color 0.5s ease, 
+                color 0.5s ease,
+                border-color 0.5s ease;
+}
+
+/* Light mode styles */
+body.light-mode {
+    --dark-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-light: #343a40;
+    --text-secondary: #6c757d;
+}
+
+body.light-mode .new-banner {
+    background: linear-gradient(45deg, #fff1d6 0%, #ffdea4 100%);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .banner-content h2 {
+    color: #ff8a00;
+}
+
+body.light-mode .banner-content p {
+    color: #3c3c3c;
+}
+
+body.light-mode .bottom-nav {
+    background-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+body.light-mode .nav-item {
+    color: #343a40;
+}
+
+body.light-mode .nav-item.active {
+    background-color: #42d158;
+    color: white;
+}
+
+/* Header styles */
+header {
+    padding: 20px 15px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}
+
+/* Table number display */
+.table-number-display {
+    display: none;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-weight: bold;
+    font-size: 14px;
+    margin: 0 10px;
+    animation: fadeIn 0.5s ease forwards;
+}
+
+.table-number-display i {
+    margin-left: 5px;
+}
+
+.table-number-display.show {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-label {
+    margin-right: 10px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.toggle-switch-container {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-switch label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #16213e;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: 0.4s;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(255, 255, 255, 0.05);
+    overflow: hidden;
+}
+
+.toggle-switch label:before {
+    content: "";
+    position: absolute;
+    height: 26px;
+    width: 26px;
+    right: 2px;
+    bottom: 2px;
+    background-color: #4eb4f5;
+    transition: 0.4s cubic-bezier(0.18, 0.89, 0.35, 1.15);
+    border-radius: 50%;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch label:after {
+    content: "🌙";
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    font-size: 16px;
+    transition: 0.5s;
+}
+
+.toggle-switch input:checked + label {
+    background-color: #f1f1f1;
+}
+
+.toggle-switch input:checked + label:before {
+    transform: translateX(-30px);
+    background-color: #ffb62b;
+}
+
+.toggle-switch input:checked + label:after {
+    content: "☀️";
+    transform: translateX(-30px);
+}
+
+/* User info section */
+.user-info {
+    padding: 0 15px 20px;
+}
+
+.welcome-text {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+
+.user-name {
+    margin-top: 5px;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.search-container {
+    position: relative;
+    margin-top: 15px;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 12px 40px 12px 15px;
+    border-radius: 20px;
+    border: none;
+    background-color: var(--card-bg);
+    color: var(--text-light);
+    font-size: 14px;
+    transition: background-color 0.5s ease, 
+                box-shadow 0.5s ease,
+                border-color 0.5s ease;
+}
+
+.search-container i {
+    position: absolute;
+    right: 15px;
+    top: 12px;
+    color: var(--text-secondary);
+}
+
+/* New Hero Banner Styles */
+.hero-banner {
+    width: 100%;
+    padding: 0 15px;
+    margin: 25px 0;
+}
+
+.new-banner {
+    position: relative;
+    border-radius: 18px;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(45deg, #1a1a2e 0%, #16213e 100%);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.5s ease, 
+                box-shadow 0.5s ease;
+}
+
+.banner-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800');
+    background-size: cover;
+    background-position: center right;
+    filter: brightness(1.1) contrast(1.1);
+    clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);
+}
+
+.banner-content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px;
+    z-index: 2;
+}
+
+.banner-content h2 {
+    font-family: 'Brush Script MT', cursive, sans-serif;
+    font-style: italic;
+    font-size: 42px;
+    color: #ff9f1c;
+    margin-bottom: 5px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    transform: rotate(-5deg);
+}
+
+.banner-content p {
+    font-size: 16px;
+    font-weight: 500;
+    color: #e6e6e6;
+    margin-bottom: 15px;
+}
+
+.banner-price {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.original-price {
+    font-size: 16px;
+    color: #a0a0a0;
+    text-decoration: line-through;
+}
+
+.discounted-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #42d158;
+}
+
+.order-now-btn {
+    background-color: #ff9f1c;
+    border: none;
+    color: #1a1a2e;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    align-self: flex-start;
+    box-shadow: 0 4px 15px rgba(255, 159, 28, 0.3);
+}
+
+.order-now-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 159, 28, 0.4);
+}
+
+.order-now-btn:active {
+    transform: translateY(0);
+}
+
+.order-now-btn i {
+    font-size: 14px;
+    transition: transform 0.3s ease;
+}
+
+.order-now-btn:hover i {
+    transform: translateX(3px);
+}
+
+/* Responsive adjustments for the new banner */
+@media (max-width: 768px) {
+    .new-banner {
+        height: 180px;
+    }
+    
+    .banner-content h2 {
+        font-size: 36px;
+    }
+    
+    .banner-content p {
+        font-size: 14px;
+    }
+    
+    .banner-price {
+        margin-bottom: 10px;
+    }
+    
+    .original-price {
+        font-size: 14px;
+    }
+    
+    .discounted-price {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .new-banner {
+        height: 160px;
+    }
+    
+    .banner-image {
+        width: 40%;
+    }
+    
+    .banner-content {
+        width: 70%;
+    }
+    
+    .banner-content h2 {
+        font-size: 28px;
+    }
+    
+    .banner-content p {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+    
+    .discounted-price {
+        font-size: 18px;
+    }
+    
+    .order-now-btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+}
+
+/* New Discount Badge Design */
+.discount-badge {
+    background-color: #FF4757;
+    color: white;
+    font-size: 0.7em;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 6px;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Add a subtle pattern to the discount badge */
+.discount-badge::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        linear-gradient(45deg, 
+        rgba(255, 255, 255, 0.1) 25%, 
+        transparent 25%, 
+        transparent 50%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        rgba(255, 255, 255, 0.1) 75%, 
+        transparent 75%, 
+        transparent);
+    background-size: 6px 6px;
+    border-radius: 4px;
+}
+
+/* High discount variant */
+.discount-badge.high-discount {
+    background-color: #FF2E2E;
+    font-size: 0.75em;
+    padding: 3px 10px;
+}
+
+/* Banner discount badge */
+.banner .discount-badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background-color: #FF4757;
+    color: white;
+    border-radius: 50%;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    margin-left: 0;
+    z-index: 5;
+}
+
+/* Add a pulsing animation only to the banner discount badge */
+@keyframes banner-badge-pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.banner .discount-badge {
+    animation: banner-badge-pulse 2s infinite;
+}
+
+/* Override pattern for banner badge */
+.banner .discount-badge::before {
+    border-radius: 50%;
+    background-image: 
+        radial-gradient(
+            circle at center,
+            rgba(255, 255, 255, 0.2) 0%,
+            rgba(255, 255, 255, 0.1) 30%,
+            transparent 70%
+        );
+}
+
+.burger-image,
+.pizza-image,
+.drinks-image {
+    position: absolute;
+    right: 10px;
+    bottom: -10px;
+    width: 160px;
+    height: 160px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transform: rotate(10deg);
+    filter: drop-shadow(0 5px 15px rgba(0,0,0,0.4));
+    transition: transform 0.3s ease;
+    z-index: 3;
+}
+
+.burger-image {
+    background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800');
+}
+
+.pizza-image {
+    background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=800');
+}
+
+.drinks-image {
+    background-image: url('https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=800');
+}
+
+.banner:hover .burger-image,
+.banner:hover .pizza-image,
+.banner:hover .drinks-image {
+    transform: rotate(15deg) translateY(-5px);
+}
+
+/* Add gradient overlay to ensure text readability */
+.banner-content::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70%;
+    height: 100%;
+    background: linear-gradient(90deg, rgba(0,0,0,0.2) 0%, transparent 100%);
+    z-index: 2;
+    pointer-events: none;
+}
+
+.banner-content.burger-banner {
+    background: linear-gradient(90deg, #006476 0%, #ffd200 100%);
+    overflow: hidden;
+    border-radius: 20px;
+    position: relative;
+}
+
+.banner-content.burger-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 65%;
+    height: 100%;
+    background-color: #006476;
+    z-index: 1;
+    border-radius: 20px;
+}
+
+.banner-content.burger-banner::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800');
+    background-size: cover;
+    background-position: center;
+    z-index: 2;
+}
+
+/* Adding colored dots to banner */
+.banner-content.burger-banner .orange-dot {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background-color: #FF9F1C;
+    border-radius: 50%;
+    bottom: 30px;
+    left: 30%;
+    z-index: 3;
+}
+
+.banner-content.burger-banner .red-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: #FF5C5C;
+    border-radius: 50%;
+    top: 40%;
+    left: 10%;
+    z-index: 3;
+}
+
+.banner-content.burger-banner .banner-text {
+    position: relative;
+    z-index: 3;
+    max-width: 55%;
+    padding-left: 20px;
+    margin-top: -10px;
+}
+
+.banner-content.burger-banner .banner-text h2 {
+    font-family: 'Brush Script MT', cursive, sans-serif;
+    font-style: italic;
+    font-size: 46px;
+    color: white;
+    text-transform: none;
+    margin-bottom: 0;
+    transform: rotate(-5deg);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.banner-content.burger-banner .banner-text p {
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: #e0fbff;
+    font-weight: 600;
+    margin-top: -5px;
+    text-transform: uppercase;
+}
+
+.banner-content.burger-banner .discount-badge {
+    background-color: #ff5c8a;
+    color: white;
+    right: 20px;
+    top: 20px;
+    width: 50px;
+    height: 50px;
+    font-size: 18px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.banner-content.burger-banner .banner-action {
+    background-color: transparent;
+    border: 2px solid white;
+    color: white;
+    padding: 6px 18px;
+    margin-top: 10px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.banner-content.pizza-banner {
+    background: linear-gradient(90deg, #e63946 0%, #ff9f1c 100%);
+}
+
+.banner-content.drinks-banner {
+    background: linear-gradient(90deg, #8338ec 0%, #3a86ff 100%);
+}
+
+/* Banner action button - Improved */
+.banner-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 25px;
+    color: var(--primary-color);
+    font-weight: bold;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 5;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.banner-action:hover {
+    transform: translateY(-3px) scale(1.05);
+    background-color: white;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.banner-action:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.banner-action::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.7s ease;
+}
+
+.banner-action:hover::before {
+    left: 100%;
+}
+
+.banner-action i {
+    font-size: 14px;
+    transition: transform 0.3s ease;
+}
+
+.banner-action:hover i {
+    transform: translateX(4px);
+}
+
+.banner-content.burger-banner .banner-action {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #02a9c1;
+}
+
+.banner-content.burger-banner .banner-action:hover {
+    background-color: #fff;
+    color: #02a9c1;
+}
+
+.banner-content.pizza-banner .banner-action {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #e63946;
+}
+
+.banner-content.pizza-banner .banner-action:hover {
+    background-color: #fff;
+    color: #e63946;
+}
+
+.banner-content.drinks-banner .banner-action {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #8338ec;
+}
+
+.banner-content.drinks-banner .banner-action:hover {
+    background-color: #fff;
+    color: #3a86ff;
+}
+
+/* Button ripple effect */
+.banner-action .ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.7);
+    width: 100px;
+    height: 100px;
+    margin-top: -50px;
+    margin-left: -50px;
+    animation: ripple 1s;
+    opacity: 0;
+}
+
+@keyframes ripple {
+    from {
+        opacity: 1;
+        transform: scale(0);
+    }
+    to {
+        opacity: 0;
+        transform: scale(3);
+    }
+}
+
+/* Swiper styles */
+.swiper-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.swiper-pagination {
+    bottom: 10px !important;
+}
+
+.swiper-pagination-bullet {
+    background-color: white;
+    opacity: 0.5;
+    width: 8px;
+    height: 8px;
+    transition: all 0.3s ease;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: white;
+    opacity: 1;
+    width: 12px;
+    height: 12px;
+}
+
+@media (min-width: 768px) {
+    .banner {
+        height: 220px;
+    }
+    
+    .banner-text {
+        max-width: 55%;
+    }
+    
+    .banner-text h2 {
+        font-size: 44px;
+    }
+    
+    .banner-text p {
+        font-size: 18px;
+    }
+    
+    .burger-image,
+    .pizza-image,
+    .drinks-image {
+        width: 200px;
+        height: 200px;
+        right: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .banner-text {
+        max-width: 65%;
+    }
+    
+    .banner-text h2 {
+        font-size: 32px;
+    }
+    
+    .banner-text p {
+        font-size: 14px;
+    }
+    
+    .burger-image,
+    .pizza-image,
+    .drinks-image {
+        width: 130px;
+        height: 130px;
+        right: 5px;
+    }
+}
+
+/* Category filters */
+.category-filters {
+    display: flex;
+    padding: 20px 15px;
+    gap: 15px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.category-filters::-webkit-scrollbar {
+    display: none;
+}
+
+.filter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 70px;
+    padding: 10px;
+    background-color: var(--card-bg);
+    border-radius: 12px;
+    gap: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter.active {
+    background-color: var(--primary-color);
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(66, 209, 88, 0.3);
+}
+
+.filter:hover:not(.active) {
+    background-color: rgba(66, 209, 88, 0.1);
+}
+
+.filter i {
+    font-size: 18px;
+}
+
+.filter span {
+    font-size: 12px;
+}
+
+/* Product grid */
+.product-grid {
+    padding: 0 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.product-card {
+    background-color: var(--card-bg);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.product-image {
+    position: relative;
+    height: 120px;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: var(--primary-color);
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.product-info {
+    padding: 12px;
+}
+
+.product-name {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.product-description {
+    font-size: 10px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    line-height: 1.4;
+    display: -webkit-box;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price {
+    font-weight: bold;
+}
+
+.price::after {
+    content: "جنية"; /* Egyptian Pound symbol */
+    margin-right: 3px;
+    font-size: 12px;
+}
+
+.add-to-cart {
+    width: 30px;
+    height: 30px;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: var(--button-radius);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.add-to-cart:hover {
+    background-color: #39b64d;
+}
+
+.add-to-cart.clicked {
+    transform: scale(0.9);
+}
+
+/* Cart notification */
+.cart-notification {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.cart-notification.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.cart-notification i {
+    font-size: 18px;
+}
+
+/* Bottom navigation - updated to match image exactly */
+.bottom-nav {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #1f2234;
+    padding: 8px 0;
+    z-index: 20;
+    perspective: 500px;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.nav-item {
+    color: #ffffff;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+.nav-item i {
+    font-size: 20px;
+    transition: transform 0.2s ease;
+}
+
+.nav-item.active {
+    background-color: #c5db16;
+    color: #1f2234;
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(197, 219, 22, 0.4);
+}
+
+.nav-item:active {
+    transform: rotateX(30deg);
+}
+
+.nav-item.tapped {
+    animation: tapEffect 0.3s ease forwards;
+}
+
+@keyframes tapEffect {
+    0% {
+        transform: rotateX(0deg);
+    }
+    50% {
+        transform: rotateX(30deg);
+    }
+    100% {
+        transform: rotateX(0deg);
+    }
+}
+
+/* Cart count */
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: var(--accent-color);
+    color: white;
+    font-size: 10px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+/* Device frame styling to match image */
+.device-frame {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20px;
+    background-color: #000;
+    border-radius: 20px 20px 0 0;
+    z-index: 10;
+}
+
+/* Add extra padding to ensure content doesn't hide under the navigation */
+body {
+    padding-bottom: 80px;
+}
+
+@media (min-width: 768px) {
+    .bottom-nav {
+        max-width: 400px;
+        width: 60%;
+    }
+    
+    .nav-item {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .nav-item i {
+        font-size: 22px;
+    }
+    
+    .device-frame {
+        display: none;
+    }
+}
+
+/* Animation for product cards */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.product-card {
+    animation: fadeIn 0.5s ease forwards;
+}
+
+/* Responsive styles */
+@media (max-width: 480px) {
+    .product-grid {
+        gap: 10px;
+    }
+    
+    .product-name {
+        font-size: 12px;
+    }
+    
+    .product-description {
+        font-size: 9px;
+    }
+}
+
+@media (min-width: 768px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .banner {
+        height: 180px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .product-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+    
+    .banner {
+        height: 200px;
+    }
+}
+
+/* Ripple effect for navigation items */
+.nav-ripple {
+    position: absolute;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(0);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.nav-ripple.active {
+    animation: ripple 0.5s ease-out;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(2);
+        opacity: 0;
+    }
+}
+
+/* Responsive improvements for navigation */
+@media (max-width: 350px) {
+    .nav-item {
+        padding: 10px 8px;
+    }
+    
+    .nav-item i {
+        font-size: 18px;
+    }
+    
+    .nav-label {
+        font-size: 9px;
+    }
+}
+
+@media (min-width: 768px) {
+    .bottom-nav {
+        max-width: 500px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 20px;
+        bottom: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .bottom-nav-hidden {
+        transform: translateX(-50%) translateY(100%);
+    }
+    
+    .nav-item {
+        padding: 15px;
+    }
+    
+    .nav-item i {
+        font-size: 22px;
+    }
+    
+    .nav-label {
+        font-size: 12px;
+    }
+}
+
+/* Theme transition overlay */
+.theme-transition-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.7;
+    transition: opacity 0.5s ease;
+}
+
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    width: 100%;
+}
+
+.loading-spinner i {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    animation: spin 1s linear infinite;
+}
+
+.loading-spinner p {
+    color: #777;
+    font-size: 0.9rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Table Indicator Styles (for QR code scans) */
+.table-indicator {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 0;
+    overflow: hidden;
+    transform: translateY(-100px);
+    opacity: 0;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.table-indicator.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.table-indicator-content {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    font-weight: 600;
+}
+
+.table-indicator i {
+    margin-left: 8px;
+    font-size: 1.2rem;
+}
+
+/* Dark Mode Compatibility */
+body.light-mode .table-indicator {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Price display for discounted items */
+.price-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.original-price {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.8em;
+    opacity: 0.8;
+}
+
+.current-price {
+    font-weight: bold;
+    color: #FF4757;
+} 

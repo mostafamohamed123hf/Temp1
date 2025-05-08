@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>لوحة التحكم | Digital Menu</title>
+    <link rel="stylesheet" href="../public/css/main.css">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
+    <meta name="description" content="Admin dashboard for Digital Menu - Manage products, view stats, and configure settings">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+    <!-- PWA Support -->
+    <link rel="manifest" href="../manifest.json">
+    <meta name="theme-color" content="#42d158">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚙️</text></svg>">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="back-button">
+                <a href="../index.html"><i class="fas fa-arrow-right"></i></a>
+            </div>
+            <h1 class="page-title">لوحة التحكم</h1>
+            <div class="admin-actions">
+                <div class="admin-info">
+                    <span class="admin-greeting">مرحباً،</span>
+                    <span class="admin-name" id="admin-name">المدير</span>
+                    <button id="admin-logout" class="admin-logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>تسجيل الخروج</span>
+                    </button>
+                </div>
+                <a href="../public/pages/cashier.html" class="cashier-link">
+                    <i class="fas fa-cash-register"></i>
+                    <span>نظام الكاشير</span>
+                </a>
+                <div class="toggle-switch">
+                    <div class="toggle-switch-container">
+                        <input type="checkbox" id="switch" checked>
+                        <label for="switch"></label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Admin Navigation Tabs -->
+    <div class="admin-tabs">
+        <a href="#dashboard-section" class="admin-tab active" data-section="dashboard-section">
+            <i class="fas fa-chart-line"></i> نظرة عامة
+        </a>
+        <a href="#products-section" class="admin-tab" data-section="products-section">
+            <i class="fas fa-utensils"></i> المنتجات
+        </a>
+        <a href="#vouchers-section" class="admin-tab" data-section="vouchers-section">
+            <i class="fas fa-ticket-alt"></i> القسائم
+        </a>
+        <a href="#tax-section" class="admin-tab" data-section="tax-section">
+            <i class="fas fa-percent"></i> الضريبة
+        </a>
+        <a href="#qr-section" class="admin-tab" data-section="qr-section">
+            <i class="fas fa-qrcode"></i> رموز QR
+        </a>
+        <a href="#users-section" class="admin-tab" data-section="users-section">
+            <i class="fas fa-users"></i> إدارة المستخدمين
+        </a>
+        <a href="#admin-settings-section" class="admin-tab" data-section="admin-settings-section" id="admin-settings-tab">
+            <i class="fas fa-user-cog"></i> إعدادات المدير
+        </a>
+    </div>
+    
+    <div class="admin-content">
+        <!-- Dashboard / Stats Section -->
+        <section class="admin-section" id="dashboard-section">
+            <h2 class="section-title">نظرة عامة
+                <button id="reset-stats" class="reset-stats-btn" title="إعادة تعيين الإحصائيات">
+                    <i class="fas fa-redo-alt"></i>
+                </button>
+            </h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>إجمالي الإيرادات</h3>
+                        <span class="stat-value" id="total-earnings">0.00 جنية</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>عدد الطلبات</h3>
+                        <span class="stat-value" id="total-orders">0</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>إجمالي المنتجات</h3>
+                        <span class="stat-value" id="total-products">0</span>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>قسائم الخصم</h3>
+                        <span class="stat-value" id="total-vouchers">0</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sales Graph and Orders List -->
+            <div class="sales-summary">
+                <h3 class="summary-title">آخر الطلبات</h3>
+                <div class="orders-list" id="recent-orders">
+                    <!-- Recent orders will be loaded here -->
+                    <div class="empty-message">
+                        <i class="fas fa-receipt"></i>
+                        <p>لا توجد طلبات حديثة</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Products Management Section -->
+        <section class="admin-section" id="products-section">
+            <div class="section-header">
+                <h2 class="section-title">إدارة المنتجات</h2>
+                <button class="add-button" id="add-product-btn">
+                    <i class="fas fa-plus"></i> إضافة منتج جديد
+                </button>
+            </div>
+            
+            <!-- Global Discount Section -->
+            <div class="global-discount-container">
+                <div class="global-discount-header">
+                    <h3 class="discount-title">تطبيق خصم على جميع المنتجات</h3>
+                </div>
+                <div class="global-discount-form">
+                    <div class="discount-input-group">
+                        <label for="global-discount-percentage">نسبة الخصم:</label>
+                        <div class="discount-input-container">
+                            <input type="number" id="global-discount-percentage" min="0" max="90" step="1" value="10">
+                            <span class="percentage-symbol">%</span>
+                        </div>
+                    </div>
+                    <button class="discount-button" id="apply-global-discount">
+                        <i class="fas fa-tags"></i> تطبيق الخصم
+                    </button>
+                    <button class="discount-button reset" id="reset-global-discount">
+                        <i class="fas fa-undo"></i> إلغاء الخصم
+                    </button>
+                </div>
+            </div>
+            
+            <div class="products-list" id="products-list">
+                <!-- Products will be loaded here dynamically -->
+                <div class="loading-spinner" id="products-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Voucher Management Section -->
+        <section class="admin-section" id="vouchers-section">
+            <div class="section-header">
+                <h2 class="section-title">إدارة القسائم</h2>
+                <button class="add-button" id="add-voucher-btn">
+                    <i class="fas fa-plus"></i> إضافة قسيمة جديدة
+                </button>
+            </div>
+            
+            <div class="vouchers-list" id="vouchers-list">
+                <!-- Vouchers will be loaded here dynamically -->
+                <div class="loading-spinner" id="vouchers-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tax Settings Section -->
+        <section class="admin-section" id="tax-section">
+            <h2 class="section-title">إعدادات الضريبة</h2>
+            
+            <div class="tax-settings">
+                <div class="setting-group">
+                    <label for="tax-rate"><i class="fas fa-percent"></i> نسبة الضريبة:</label>
+                    <div class="tax-rate-control">
+                        <input type="number" id="tax-rate" min="0" max="100" step="0.1" value="15">
+                        <span class="percentage-symbol">%</span>
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="tax-enabled"><i class="fas fa-toggle-on"></i> تفعيل الضريبة:</label>
+                    <div class="toggle-switch-container tax-toggle">
+                        <input type="checkbox" id="tax-enabled" checked>
+                        <label for="tax-enabled"></label>
+                    </div>
+                </div>
+                
+                <hr class="tax-divider">
+                
+                <div class="setting-group">
+                    <label for="service-tax-rate"><i class="fas fa-percent"></i> نسبة ضريبة الخدمة:</label>
+                    <div class="tax-rate-control">
+                        <input type="number" id="service-tax-rate" min="0" max="100" step="0.1" value="10">
+                        <span class="percentage-symbol">%</span>
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <label for="service-tax-enabled"><i class="fas fa-toggle-on"></i> تفعيل ضريبة الخدمة:</label>
+                    <div class="toggle-switch-container tax-toggle">
+                        <input type="checkbox" id="service-tax-enabled">
+                        <label for="service-tax-enabled"></label>
+                    </div>
+                </div>
+                
+                <button class="save-button" id="save-tax-settings">
+                    <i class="fas fa-save"></i> حفظ الإعدادات
+                </button>
+            </div>
+        </section>
+
+        <!-- User Management Section -->
+        <section class="admin-section" id="users-section">
+            <div class="section-header">
+                <h2 class="section-title">إدارة المستخدمين</h2>
+                <button class="add-button" id="add-user-btn">
+                    <i class="fas fa-plus"></i> إضافة مستخدم جديد
+                </button>
+            </div>
+            
+            <!-- Website Visitors Analytics -->
+            <div class="visitors-analytics">
+                <h3 class="subsection-title">احصائيات الزوار</h3>
+                
+                <div class="stats-grid visitors-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-friends"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>إجمالي الزوار</h3>
+                            <span class="stat-value" id="total-visitors">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>الهواتف المحمولة</h3>
+                            <span class="stat-value" id="mobile-visitors">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-desktop"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>أجهزة سطح المكتب</h3>
+                            <span class="stat-value" id="desktop-visitors">0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-tablet-alt"></i>
+                        </div>
+                        <div class="stat-details">
+                            <h3>الأجهزة اللوحية</h3>
+                            <span class="stat-value" id="tablet-visitors">0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Visitors List -->
+                <div class="visitors-container">
+                    <div class="admin-search-container">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="visitors-search" placeholder="بحث عن زائر...">
+                        </div>
+                        <div class="filter-group">
+                            <select id="visitors-filter">
+                                <option value="all">جميع الزوار</option>
+                                <option value="mobile">الهواتف المحمولة</option>
+                                <option value="desktop">أجهزة سطح المكتب</option>
+                                <option value="tablet">الأجهزة اللوحية</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="visitors-table-container">
+                        <table class="visitors-table">
+                            <thead>
+                                <tr>
+                                    <th>الرقم</th>
+                                    <th>عنوان IP</th>
+                                    <th>نوع الجهاز</th>
+                                    <th>المتصفح</th>
+                                    <th>وقت الزيارة</th>
+                                    <th>صفحة الدخول</th>
+                                </tr>
+                            </thead>
+                            <tbody id="visitors-table-body">
+                                <!-- Visitors data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Users Management -->
+            <div class="users-management">
+                <h3 class="subsection-title">إدارة الحسابات</h3>
+                
+                <div class="admin-search-container">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="users-search" placeholder="بحث عن مستخدم...">
+                    </div>
+                    <div class="filter-group">
+                        <select id="users-filter">
+                            <option value="all">جميع المستخدمين</option>
+                            <option value="admin">المديرين</option>
+                            <option value="editor">المحررين</option>
+                            <option value="viewer">المشاهدين</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="users-table-container">
+                    <table class="users-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>اسم المستخدم</th>
+                                <th>الصلاحيات</th>
+                                <th>آخر تسجيل دخول</th>
+                                <th>الحالة</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body">
+                            <!-- Users data will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Settings Section -->
+        <section class="admin-section" id="admin-settings-section">
+            <h2 class="section-title">إعدادات المدير</h2>
+            
+            <div class="admin-settings">
+                <form id="admin-settings-form" class="settings-form">
+                    <div class="form-group">
+                        <label for="admin-display-name"><i class="fas fa-user"></i> الاسم الظاهر:</label>
+                        <input type="text" id="admin-display-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-username"><i class="fas fa-user-tag"></i> اسم المستخدم:</label>
+                        <input type="text" id="admin-username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-current-password"><i class="fas fa-lock"></i> كلمة المرور الحالية:</label>
+                        <div class="password-input-group">
+                            <input type="password" id="admin-current-password" required>
+                            <button type="button" class="toggle-password" data-target="admin-current-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-new-password"><i class="fas fa-key"></i> كلمة المرور الجديدة:</label>
+                        <div class="password-input-group">
+                            <input type="password" id="admin-new-password" placeholder="اترك فارغاً إذا لم ترد التغيير">
+                            <button type="button" class="toggle-password" data-target="admin-new-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="admin-confirm-password"><i class="fas fa-check-circle"></i> تأكيد كلمة المرور الجديدة:</label>
+                        <div class="password-input-group">
+                            <input type="password" id="admin-confirm-password" placeholder="اترك فارغاً إذا لم ترد التغيير">
+                            <button type="button" class="toggle-password" data-target="admin-confirm-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="save-button primary-save-button">
+                        <i class="fas fa-save"></i> حفظ بيانات المدير
+                    </button>
+                </form>
+                
+                <div class="security-tips">
+                    <h3><i class="fas fa-shield-alt"></i> نصائح الأمان:</h3>
+                    <ul>
+                        <li>استخدم كلمة مرور قوية تحتوي على أحرف وأرقام ورموز.</li>
+                        <li>لا تشارك بيانات الدخول مع أي شخص غير مصرح له.</li>
+                        <li>قم بتغيير كلمة المرور بشكل دوري للحفاظ على أمان حسابك.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- QR Code Generator Section -->
+        <section class="admin-section" id="qr-section">
+            <div class="section-header">
+                <h2 class="section-title">توليد رموز QR للطاولات</h2>
+            </div>
+            
+            <div class="qr-generator">
+                <div class="qr-form">
+                    <div class="form-group">
+                        <label for="table-number">رقم الطاولة:</label>
+                        <input type="number" id="table-number" min="1" value="1">
+                    </div>
+                    <div class="form-actions">
+                        <button class="generate-qr-button" id="create-qr-btn">
+                            <i class="fas fa-qrcode"></i> إنشاء رمز QR
+                        </button>
+                    </div>
+                </div>
+                <div class="qr-preview" id="qr-preview">
+                    <div class="qr-placeholder">
+                        <i class="fas fa-qrcode"></i>
+                        <p>الرجاء إدخال رقم الطاولة لإنشاء رمز QR</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="qr-table-list" id="qr-table-list">
+                <h3 class="qr-list-title">رموز QR المُنشأة</h3>
+                <div class="qr-list-container">
+                    <!-- QR codes will be displayed here -->
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Add/Edit Product Modal -->
+    <div class="modal" id="product-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-product-modal">&times;</span>
+            <h2 id="product-modal-title">إضافة منتج جديد</h2>
+            
+            <form id="product-form">
+                <input type="hidden" id="product-id" value="">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product-name">اسم المنتج:</label>
+                        <input type="text" id="product-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-category">الفئة:</label>
+                        <select id="product-category" required>
+                            <option value="pizza">بيتزا</option>
+                            <option value="burger">برجر</option>
+                            <option value="sandwich">سندوتش</option>
+                            <option value="drink">مشروبات</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-description">وصف المنتج:</label>
+                    <textarea id="product-description" required></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product-price">السعر:</label>
+                        <div class="price-input">
+                            <input type="number" id="product-price" min="0" step="0.5" required>
+                            <span class="currency-symbol">جنية</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="product-rating">التقييم:</label>
+                        <div class="rating-input">
+                            <input type="number" id="product-rating" min="0" max="5" step="0.1" placeholder="4.5">
+                            <span class="rating-symbol"><i class="fas fa-star"></i></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="product-image">صورة المنتج:</label>
+                    <div class="image-upload-container">
+                        <div class="image-upload-tabs">
+                            <button type="button" class="image-tab active" data-tab="url">رابط صورة</button>
+                            <button type="button" class="image-tab" data-tab="upload">رفع صورة</button>
+                        </div>
+                        <div class="image-tab-content active" id="url-tab">
+                            <div class="image-input-container">
+                                <input type="url" id="product-image" placeholder="https://example.com/image.jpg">
+                                <button type="button" id="preview-image-btn">معاينة</button>
+                            </div>
+                        </div>
+                        <div class="image-tab-content" id="upload-tab">
+                            <div class="file-upload-wrapper">
+                                <input type="file" id="product-image-upload" accept="image/*" class="file-upload-input">
+                                <div class="file-upload-box">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>اضغط لاختيار صورة أو اسحب وأفلت الصورة هنا</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="product-image-final" required>
+                    <div class="image-preview" id="image-preview">
+                        <img src="" alt="معاينة الصورة" id="preview-img">
+                        <div class="no-preview" id="no-preview">
+                            <i class="fas fa-image"></i>
+                            <p>لا توجد معاينة</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="save-button primary-save-button" id="save-product">
+                        <i class="fas fa-save"></i> حفظ المنتج
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Voucher Modal -->
+    <div class="modal" id="voucher-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-voucher-modal">&times;</span>
+            <h2 id="voucher-modal-title">إضافة قسيمة جديدة</h2>
+            
+            <form id="voucher-form">
+                <div class="form-group">
+                    <label for="voucher-code">كود القسيمة:</label>
+                    <div class="code-input-group">
+                        <input type="text" id="voucher-code" required>
+                        <button type="button" id="generate-code-btn"><i class="fas fa-sync-alt"></i> توليد</button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="voucher-discount">نسبة الخصم:</label>
+                    <div class="discount-input">
+                        <input type="number" id="voucher-discount" min="1" max="100" step="1" required>
+                        <span class="percentage-symbol">%</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="voucher-min-order">الحد الأدنى للطلب:</label>
+                    <div class="price-input">
+                        <input type="number" id="voucher-min-order" min="0" step="1" value="0">
+                        <span class="currency-symbol">جنية</span>
+                    </div>
+                    <p class="form-hint">اترك القيمة 0 لعدم تحديد حد أدنى للطلب</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="voucher-category">الفئة المستهدفة:</label>
+                    <select id="voucher-category">
+                        <option value="all">جميع الفئات</option>
+                        <option value="pizza">بيتزا</option>
+                        <option value="burger">برجر</option>
+                        <option value="sandwich">سندوتش</option>
+                        <option value="drink">مشروبات</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="voucher-expiry">تاريخ انتهاء الصلاحية:</label>
+                    <input type="date" id="voucher-expiry" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="save-button" id="save-voucher">
+                        <i class="fas fa-save"></i> حفظ القسيمة
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- User Modal for Adding/Editing Users -->
+    <div class="modal" id="user-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="user-modal-title">إضافة مستخدم جديد</h2>
+                <span class="close-modal" id="close-user-modal">&times;</span>
+            </div>
+            
+            <form id="user-form">
+                <input type="hidden" id="user-id" value="">
+                
+                <!-- User Information -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="user-display-name"><i class="fas fa-user"></i> الاسم الظاهر:</label>
+                        <input type="text" id="user-display-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-username"><i class="fas fa-user-tag"></i> اسم المستخدم:</label>
+                        <input type="text" id="user-username" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="user-email"><i class="fas fa-envelope"></i> البريد الإلكتروني:</label>
+                        <input type="email" id="user-email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-phone"><i class="fas fa-phone"></i> رقم الهاتف:</label>
+                        <input type="tel" id="user-phone">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="user-password"><i class="fas fa-lock"></i> كلمة المرور:</label>
+                        <div class="password-input-group">
+                            <input type="password" id="user-password" required>
+                            <button type="button" class="toggle-password" data-target="user-password">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="user-role"><i class="fas fa-user-shield"></i> المستوى:</label>
+                        <select id="user-role" required>
+                            <option value="admin">مدير</option>
+                            <option value="editor">محرر</option>
+                            <option value="viewer">مشاهد</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- User Permissions -->
+                <div class="permissions-section">
+                    <h3 class="permissions-title"><i class="fas fa-lock"></i> الصلاحيات</h3>
+                    
+                    <div class="permissions-grid">
+                        <div class="permission-item">
+                            <div class="permission-label-container">
+                                <label for="perm-stats">الإحصائيات:</label>
+                                <small>إمكانية الوصول للإحصائيات والمبيعات</small>
+                            </div>
+                            <div class="toggle-switch-container perm-toggle">
+                                <input type="checkbox" id="perm-stats">
+                                <label for="perm-stats"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="permission-item">
+                            <div class="permission-label-container">
+                                <label for="perm-products-view">عرض المنتجات:</label>
+                                <small>إمكانية مشاهدة المنتجات</small>
+                            </div>
+                            <div class="toggle-switch-container perm-toggle">
+                                <input type="checkbox" id="perm-products-view">
+                                <label for="perm-products-view"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="permission-item">
+                            <div class="permission-label-container">
+                                <label for="perm-products-edit">تعديل المنتجات:</label>
+                                <small>إمكانية إضافة وتعديل وحذف المنتجات</small>
+                            </div>
+                            <div class="toggle-switch-container perm-toggle">
+                                <input type="checkbox" id="perm-products-edit">
+                                <label for="perm-products-edit"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="permission-item">
+                            <div class="permission-label-container">
+                                <label for="perm-vouchers-view">عرض القسائم:</label>
+                                <small>إمكانية مشاهدة قسائم الخصم</small>
+                            </div>
+                            <div class="toggle-switch-container perm-toggle">
+                                <input type="checkbox" id="perm-vouchers-view">
+                                <label for="perm-vouchers-view"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="permission-item">
+                            <div class="permission-label-container">
+                                <label for="perm-vouchers-edit">تعديل القسائم:</label>
+                                <small>إمكانية إضافة وتعديل وحذف قسائم الخصم</small>
+                            </div>
+                            <div class="toggle-switch-container perm-toggle">
+                                <input type="checkbox" id="perm-vouchers-edit">
+                                <label for="perm-vouchers-edit"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="permission-item">
+                            <div class="permission-label-container">
+                                <label for="perm-tax">إدارة الضريبة:</label>
+                                <small>إمكانية تعديل إعدادات الضريبة</small>
+                            </div>
+                            <div class="toggle-switch-container perm-toggle">
+                                <input type="checkbox" id="perm-tax">
+                                <label for="perm-tax"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="permission-item">
+                            <div class="permission-label-container">
+                                <label for="perm-qr">إدارة رموز QR:</label>
+                                <small>إمكانية إنشاء وإدارة رموز QR للطاولات</small>
+                            </div>
+                            <div class="toggle-switch-container perm-toggle">
+                                <input type="checkbox" id="perm-qr">
+                                <label for="perm-qr"></label>
+                            </div>
+                        </div>
+                        
+                        <div class="permission-item">
+                            <div class="permission-label-container">
+                                <label for="perm-users">إدارة المستخدمين:</label>
+                                <small>إمكانية إدارة المستخدمين والصلاحيات</small>
+                            </div>
+                            <div class="toggle-switch-container perm-toggle">
+                                <input type="checkbox" id="perm-users">
+                                <label for="perm-users"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="user-status"><i class="fas fa-toggle-on"></i> الحالة:</label>
+                    <select id="user-status" required>
+                        <option value="active">نشط</option>
+                        <option value="inactive">غير نشط</option>
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="save-button primary-save-button" id="save-user">
+                        <i class="fas fa-save"></i> حفظ المستخدم
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Notification Modal (Confirmation) -->
+    <div class="modal" id="notification-modal">
+        <!-- ... existing code ... -->
+    </div>
+    
+    <!-- Scripts -->
+    <script src="js/admin.js"></script>
+    <script src="js/admin-auth.js"></script>
+    <script src="js/user-management.js"></script>
+    <script src="js/api-service.js"></script>
+    <script src="../public/js/visitor-tracker.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('../public/js/service-worker.js')
+                    .then(registration => {
+                        console.log('Service Worker registered with scope:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('Service Worker registration failed:', error);
+                    });
+                    
+                // Check for service worker updates
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    console.log('New service worker activated, reloading for fresh content');
+                    window.location.reload();
+                });
+            });
+            
+            // Handle offline/online status
+            window.addEventListener('online', () => {
+                document.body.classList.remove('offline-mode');
+                console.log('Application is back online');
+            });
+            
+            window.addEventListener('offline', () => {
+                document.body.classList.add('offline-mode');
+                console.log('Application is offline');
+            });
+        }
+    </script>
+    
+    <style>
+        .admin-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .cashier-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--admin-accent-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(66, 209, 88, 0.25);
+        }
+        
+        .cashier-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(66, 209, 88, 0.3);
+        }
+        
+        @media (max-width: 768px) {
+            .cashier-link span {
+                display: none;
+            }
+            
+            .cashier-link {
+                width: 40px;
+                height: 40px;
+                padding: 0;
+                justify-content: center;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+    
+    <script>
+        // Tab navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.admin-tab');
+            const sections = document.querySelectorAll('.admin-section');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all sections
+                    sections.forEach(section => {
+                        section.style.display = 'none';
+                    });
+                    
+                    // Show the selected section
+                    const targetSection = this.getAttribute('data-section');
+                    document.getElementById(targetSection).style.display = 'block';
+                    
+                    // Scroll to top
+                    window.scrollTo(0, 0);
+                });
+            });
+            
+            // Show dashboard section by default
+            sections.forEach((section, index) => {
+                if (index === 0) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
